@@ -12,7 +12,7 @@ from tensorflow.keras.applications import DenseNet121
 
 INIT_LR = 0.1
 BATCH_SIZE = 32  # Adjust the batch size
-NUM_EPOCHS = 20  # Adjust the number of epochs
+NUM_EPOCHS = 20  
 lr_find = True
 
 classes = ['BLOTCH', 'NORMAL', 'ROT', 'SCAB']
