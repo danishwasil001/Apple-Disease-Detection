@@ -34,10 +34,7 @@ def analyze_apple_image(image_path):
     red_percentage = round((red_pixels / total_pixels) * 100, 3)
     green_percentage = round((green_pixels / total_pixels) * 100, 3)
 
-    # Identify areas with disease (you can customize this part based on your needs)
-    # Here, for example, we assume a simple threshold for disease detection
-    # You might replace this with actual disease detection logic
-    disease_mask = cv2.inRange(image, np.array([0, 0, 0]), np.array([50, 50, 50]))  # Adjust as necessary
+    disease_mask = cv2.inRange(image, np.array([0, 0, 0]), np.array([50, 50, 50])) 
     disease_area = np.sum(disease_mask > 0)
     disease_size = round((disease_area / total_pixels) * 100, 3)  # Percentage of the area affected
 
@@ -53,12 +50,10 @@ def analyze_apple_image(image_path):
 
 
 def calculate_nutritional_impact(analysis_results):
-    # Example logic to determine nutritional impact based on analysis results
     red_percentage = analysis_results["red_percentage"]
     green_percentage = analysis_results["green_percentage"]
     disease_size = analysis_results["disease_size"]
 
-    # Assume a base nutritional value for a healthy apple
     base_nutrition = {
         "Calories": 95,
         "Carbohydrates": "25g",
@@ -67,29 +62,24 @@ def calculate_nutritional_impact(analysis_results):
         "Minerals": "Potassium, Calcium"
     }
 
-    # Adjust nutritional values based on color and disease size
-    if disease_size > 10:  # Example threshold for disease impact
-        base_nutrition["Calories"] -= 20  # Decrease calories if disease is significant
-        base_nutrition["Fiber"] = str(float(base_nutrition["Fiber"].replace("g", "")) - 1) + "g"  # Decrease fiber
-        base_nutrition["Vitamins"] = "Lower levels"  # General note
+    if disease_size > 10:  
+        base_nutrition["Calories"] -= 20  
+        base_nutrition["Fiber"] = str(float(base_nutrition["Fiber"].replace("g", "")) - 1) + "g"  
+        base_nutrition["Vitamins"] = "Lower levels" 
 
-    # Further adjustments can be made based on red and green percentages
 
     return base_nutrition
 
-# Configure the Google Generative AI with API key
-os.environ["API_KEY"] = 'AIzaSyBeat7bxnm7CCBe6MXzFrZO4N_gYkcze1I'  # Replace with your actual API key
+os.environ["API_KEY"] = 'API_KEY_HERE'
 genai.configure(api_key=os.environ["API_KEY"])
 
-# Initialize the Google Generative AI model (renamed to avoid conflicts)
 genai_model = genai.GenerativeModel('gemini-1.5-flash-latest')
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg'}
 
-# Load the pre-trained apple disease classification model
-model_path = 'C:/Users/mohdd/PycharmProjects/INT/apple_latest.h5'  # Update path if needed
+model_path = '../apple_latest.h5' 
 model = keras.models.load_model(model_path)
 
 # Define disease classes
@@ -112,7 +102,6 @@ def index():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-            # Perform disease detection (existing function)
             predicted_class = detect_disease(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             print(f"Predicted Disease Class: {predicted_class}")
 
@@ -142,9 +131,9 @@ def detect_disease(image_path):
     prediction = model.predict(image)
     predicted_class_index = np.argmax(prediction)
     predicted_class = disease_classes[predicted_class_index]
-    print(f"Predicted Disease Class: {predicted_class}")  # Already added in detect_disease()
+    print(f"Predicted Disease Class: {predicted_class}")  
 
-    return predicted_class  # Ensure this returns the predicted disease
+    return predicted_class 
 
 
 def get_disease_info(disease):
@@ -156,28 +145,27 @@ def get_disease_info(disease):
     """
 
     try:
-        # Generate textual content for remedies, effects, and best practices
+        
         response = genai_model.generate_content(prompt)
         result = response.text.strip()
 
-        # Initialize formatted response
+       
         remedies = effects = best_practices = ""
 
-        # Properly format the remedies
+       
         if "Remedies:" in result:
             remedies_part = result.split("Remedies:")[1].split("Effects:")[0].strip()
             remedies_list = remedies_part.split('\n')  # Split into individual points
             remedies_items = "".join([f"<li>{item.replace('*', '').strip()}</li>" for item in remedies_list])
             remedies = f"<h3>Remedies:</h3><ul>{remedies_items}</ul>"
 
-        # Properly format the effects
+
         if "Effects:" in result:
             effects_part = result.split("Effects:")[1].split("Best Practices:")[0].strip()
             effects_list = effects_part.split('\n')  # Split into individual points
             effects_items = "".join([f"<li>{item.replace('*', '').strip()}</li>" for item in effects_list])
             effects = f"<h3>Effects:</h3><ul>{effects_items}</ul>"
 
-        # Properly format the best practices
         if "Best Practices:" in result:
             best_practices_part = result.split("Best Practices:")[1].strip()
             best_practices_list = best_practices_part.split('\n')  # Split into individual points
@@ -189,7 +177,7 @@ def get_disease_info(disease):
 
         return formatted_response, None  # Return None for image URL
 
-    except Exception as e:
+    except Exception as e
         # Return an error message and None for the image URL
         return f"Error fetching information: {str(e)}", None
 
