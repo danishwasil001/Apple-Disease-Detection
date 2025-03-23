@@ -3,14 +3,13 @@ import numpy as np
 from tensorflow import keras
 from skimage.feature import graycomatrix, graycoprops
 
-# Load your trained leaf disease classification model
-model = keras.models.load_model('C:/Users/mohdd/PycharmProjects/INT/apple_latest.h5')
+model = keras.models.load_model('../apple_latest.h5')
 
 # Function to preprocess the image before classification
 def preprocess_image(image):
-    image = cv2.resize(image, (128, 128))  # Resize the image to the size used by DenseNet121
-    image = image / 255.0  # Normalize the pixel values
-    image = np.expand_dims(image, axis=0)  # Add batch dimension
+    image = cv2.resize(image, (128, 128)) 
+    image = image / 255.0  
+    image = np.expand_dims(image, axis=0)  
     return image
 
 def feature_extractor(image):
