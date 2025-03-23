@@ -2,24 +2,23 @@ import cv2
 import numpy as np
 from tensorflow import keras
 
-# Load your trained leaf disease classification model
-model = keras.models.load_model('C:/Users/mohdd/PycharmProjects/INT/apple_latest.h5')
+model = keras.models.load_model('../apple_latest.h5')
 
 # Function to preprocess the image before classification
 def preprocess_image(image):
-    image = cv2.resize(image, (128, 128))  # Resize the image to the size used by DenseNet121
-    image = image / 255.0  # Normalize the pixel values
-    image = np.expand_dims(image, axis=0)  # Add batch dimension
+    image = cv2.resize(image, (128, 128)) 
+    image = image / 255.0  
+    image = np.expand_dims(image, axis=0) 
     return image
 
-# Function to classify the leaf image
+
 def classify_leaf(image):
     preprocessed_image = preprocess_image(image)
     prediction = model.predict(preprocessed_image)
     return prediction
 
 # Open your computer's camera
-cap = cv2.VideoCapture(0)  # Use 0 for the default camera, or change to another index if you have multiple cameras
+cap = cv2.VideoCapture(0)
 
 while True:
     ret, frame = cap.read()
