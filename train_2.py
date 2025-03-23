@@ -8,7 +8,7 @@ from tensorflow.keras.models import Model
 
 dataset_path = '../APPLE DISEASES'  # dataset path
 image_size = (224, 224)
-batch_size = 32  # batch size
+batch_size = 32 
 
 # ImageDataGenerator for preprocessing
 datagen = ImageDataGenerator(
