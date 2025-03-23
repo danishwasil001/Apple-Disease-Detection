@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Apple Disease Detection</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Open+Sans&display=swap');
+
+        /* Ensure that the body allows scrolling */
+        html, body {
+
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100%;  /* Set height to 100% to allow the content to fill the page */
+            /*overflow-y: auto;  /* Allow vertical scrolling */
+            width: 100%;
+            background-color: blue;
+        }
+
+        /* Wrapper for the content to ensure it doesn't overflow */
+        .content-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+            min-height: 100vh;  /* Ensure the content takes full screen height */
+        }
+
+        h1 {
+            font-size: 40px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;  /* Limit form width */
+            margin-bottom: 20px;  /* Add margin to avoid overlap */
+        }
+
+        input[type="file"], input[type="submit"] {
+            font-size: 18px;
+            padding: 10px 20px;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .response-content {
+            width: 80%;
+            max-width: 600px;  /* Limit response width */
+            margin-top: 20px;
+        }
+
+        h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Ensure the page is scrollable */
+        html {
+            height: 100%;
+        }
+
+        body {
+            overflow-x: hidden;  /* Prevent horizontal scrolling */
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="content-wrapper">
+        <h1>Apple Disease Detection</h1>
+
+        <form id="disease-form" action="/detect" method="post" enctype="multipart/form-data">
+            <input type="file" name="image" accept=".jpg, .jpeg, .png">
+            <input type="submit" value="Detect Disease">
+        </form>
+
+        {% if prediction and additional_info %}
+        <div class="response-content">
+            <h2>Predicted Disease: {{ prediction if prediction else "No prediction available" }}</h2>
+            <div class="additional-info">{{ additional_info|safe }}</div>
+
+            {% if analysis_results %}
+            <h3>Color Analysis:</h3>
+            <ul>
+                <li>Red Color Percentage: {{ analysis_results.red_percentage }}%</li>
+                <li>Green Color Percentage: {{ analysis_results.green_percentage }}%</li>
+                <li>Disease Area: {{ analysis_results.disease_size }}%</li>
+            </ul>
+
+            <h3>Nutritional Information:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nutrient</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Calories</td>
+                        <td>{{ nutrition_info['Calories'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Carbohydrates</td>
+                        <td>{{ nutrition_info['Carbohydrates'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Fiber</td>
+                        <td>{{ nutrition_info['Fiber'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Vitamins</td>
+                        <td>{{ nutrition_info['Vitamins'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Minerals</td>
+                        <td>{{ nutrition_info['Minerals'] }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+    <div id="falling-apples"> </div>
+
+        <script>
+        // JavaScript to create and animate falling apples
+            function createFallingApple() {
+                const apple = document.createElement('img');
+                apple.src = '/static/apple.png';  // Add the path to your apple image here
+                apple.classList.add('apple');
+                apple.style.left = Math.random() * 100 + 'vw';
+                apple.style.width = Math.random() * 30 + 30 + 'px'; // Random width between 30px and 60px
+                apple.style.animation = `fall ${Math.random() * 2 + 3}s linear infinite`;  // Random speed
+
+                document.getElementById('falling-apples').appendChild(apple);
+
+            // Remove the apple after it falls off the screen
+                setTimeout(() => {
+                    apple.remove();
+                }, 5000);
+            }
+
+        // Continuously generate apples
+            setInterval(createFallingApple, 1000); // Creates an apple every 1 second
+        </script>
+
+</body>
+</html>
