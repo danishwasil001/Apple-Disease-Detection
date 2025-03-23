@@ -21,8 +21,8 @@ images = []
 labels = []
 for c in classes:
     try:
-        for img in os.listdir('C:/Users/mohdd/Desktop/APPLE DISEASES/' + c):
-            img_path = 'C:/Users/mohdd/Desktop/APPLE DISEASES/' + c + '/' + img
+        for img in os.listdir('../APPLE DISEASES/' + c):
+            img_path = '../APPLE DISEASES/' + c + '/' + img
             img = cv2.imread(img_path)
             if img is None:
                 print(f"Failed to load image: {img_path}")
@@ -69,7 +69,6 @@ aug = ImageDataGenerator(
     horizontal_flip=True,
     fill_mode="nearest")
 
-# Load the pre-trained DenseNet121 model
 base_model = DenseNet121(weights='imagenet', include_top=False)
 
 # Add a global spatial average pooling layer
@@ -127,7 +126,6 @@ plt.plot(N, H.history["val_accuracy"], label="val_acc")
 plt.legend()
 plt.savefig("output/training_plot.png")
 
-# load the trained model from disk
 print("[INFO] loading model...")
 model = load_model('output/apple_latest.h5')
 
